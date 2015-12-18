@@ -20,6 +20,14 @@ namespace Fenton.SmtpService
             }
         }
 
+        public int MessageLimit
+        {
+            get
+            {
+                return GetConfigurationInt32("MessageLimit");
+            }
+        }
+
         public bool SaveMessages
         {
             get

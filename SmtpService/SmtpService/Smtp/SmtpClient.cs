@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace Fenton.SmtpService
         private readonly ASCIIEncoding _encoder;
         private readonly string _loggingDirectory;
         private readonly bool _saveMessages;
+        private readonly int _messageLimit;
+        private readonly string _emailFileExtension = ".eml";
 
         public SmtpClient(NetworkStream clientStream, ConfigurationProvider configurationProvider)
         {
@@ -20,6 +23,7 @@ namespace Fenton.SmtpService
             _encoder = new ASCIIEncoding();
             _loggingDirectory = configurationProvider.LoggingDirectory;
             _saveMessages = configurationProvider.SaveMessages;
+            _messageLimit = configurationProvider.MessageLimit;
             Directory.CreateDirectory(configurationProvider.LoggingDirectory);
         }
 
@@ -29,8 +33,10 @@ namespace Fenton.SmtpService
         {
             if (_saveMessages)
             {
-                string path = Path.Combine(_loggingDirectory, Guid.NewGuid().ToString());
+                string path = Path.Combine(_loggingDirectory, Guid.NewGuid().ToString() + _emailFileExtension);
                 File.WriteAllText(path, SmtpMessage);
+
+                CleanOldMessages();
             }
         }
 
@@ -72,6 +78,19 @@ namespace Fenton.SmtpService
             while (!MessageTerminated(messageData, messageTerminator));
 
             return _encoder.GetString(messageData.ToArray());
+        }
+
+
+        private void CleanOldMessages()
+        {
+            if (_messageLimit > 0)
+            {
+                var oldFiles = Directory.GetFiles(_loggingDirectory).Where(f => new FileInfo(f).Extension == _emailFileExtension).OrderByDescending(f => new FileInfo(f).CreationTimeUtc).Skip(_messageLimit).ToList();
+                foreach (var file in oldFiles)
+                {
+                    File.Delete(file);
+                }
+            }
         }
 
         private bool MessageTerminated(List<byte> messageData, byte[] messageTerminator)

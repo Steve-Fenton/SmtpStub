@@ -22,7 +22,7 @@ namespace SmtpTest
                 client.Host = "localhost";
 
                 message.Subject = "This is a test email.";
-                message.Body = "This is my test email body";
+                message.Body = $"This is my test email body {DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")}.";
                 message.Headers.Add("Message-Id", $"<{guid}@localhost>");
 
                 client.Send(message);
