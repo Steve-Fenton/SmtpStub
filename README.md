@@ -9,4 +9,4 @@ Runs as a Windows Service or as a Console application.
 
 The full source code is available in this repository, or you can download a zip containing the working application from:
 
-https://github.com/Steve-Fenton/SmtpStub/raw/master/SmtpConsolev1.0.0.0.zip
+https://github.com/Steve-Fenton/SmtpStub/raw/master/SmtpConsolev1.1.0.0.zip
