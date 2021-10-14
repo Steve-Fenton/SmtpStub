@@ -9,4 +9,12 @@ Runs as a Windows Service or as a Console application.
 
 The full source code is available in this repository, or you can download a zip containing the working application from:
 
-https://github.com/Steve-Fenton/SmtpStub/raw/master/SmtpConsolev1.1.0.0.zip
+Just grab SmtpConsolev1.1.0.0.zip from the root folder.
+
+You can install this as a Windows Service using PowerShell:
+
+    New-Service -Name "SmtpStub" -BinaryPathName "C:\SmtpStub\Fenton.SmtpService.exe"
+
+And there is a bit more about it here:
+
+https://www.stevefenton.co.uk/2015/12/one-way-to-never-send-an-email-from-your-test-environment/
